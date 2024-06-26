@@ -1,0 +1,76 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+<div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class="active" aria-current="true"></button>
+    </div>
+    <div class="carousel-inner" >
+      <div class="carousel-item" style="background-image: url('../../static/clasic.jpg');">
+        <svg class="bd-placeholder-img" width="100%" height="500px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
+        <div class="container">
+          <div class="carousel-caption text-start">
+            <h1>Short classics</h1>
+            <p class="opacity-75">News for lovers of classics</p>
+            <p><a class="btn btn-lg btn-primary" href="#">Show the catalog</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item" style="background-image: url('../../static/kids.jpg');">
+        <svg class="bd-placeholder-img" width="100%" height="500px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
+        <div class="container">
+          <div class="carousel-caption">
+            <h1>New books for kids</h1>
+            <p>Discover new adventures</p>
+            <p><a class="btn btn-lg btn-primary" href="#">Show the catalog</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item active"  style="background-image: url('../../static/discount.jpg');">
+        <svg class="bd-placeholder-img" width="100%" height="500px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
+        <div class="container">
+          <div class="carousel-caption text-end">
+            <h1>Get 40% discount</h1>
+            <p>Take advantage of offers on selected books</p>
+            <p><a class="btn btn-lg btn-primary" href="#">Show the catalog</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <h1 style="padding: 50px;">Bestsellers</h1>
+
+
+<div style="display: flex;">
+  {% for book in books %}
+  <div class="card" style="width: 18rem; margin-left: 30px;">
+  <img src="{{ book.picture }}" class="card-img-top" alt="...">
+  <div class="card-body" style="padding: 40px;">
+    <h5 class="card-title">{{book.name}}</h5>
+    <h6>{{book.author}}</h6>
+    <p class="card-text">{{book.description}}</p>
+    <a href="#" class="btn btn-primary">Show</a>
+  </div>
+    </div>
+
+  {% endfor %}
+
+</div>
+
+ {% endblock %}
+
+
+
+
