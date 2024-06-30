@@ -1,0 +1,35 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+
+
+
+<style>
+  .card-custom {
+    max-width: 14rem; /* Adjust the width as needed */
+    margin: auto; /* Center the card within the column */
+  }
+</style>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+  {% for serie in series %}
+  <div class="col">
+    <div class="card card-custom shadow-sm">
+      <img src="{{ series.picture }}" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="Book Image">
+      <div class="card-body">
+        <h5 class="card-title">{{ serie.name }}</h5>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+ {% endblock %}
