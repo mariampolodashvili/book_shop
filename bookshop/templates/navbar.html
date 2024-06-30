@@ -1,27 +1,38 @@
-  <div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <div class="col-md-3 mb-2 mb-md-0">
+<div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0 d-flex align-items-center">
+
         <a href="/bookshop/base/static" class="d-inline-flex link-body-emphasis text-decoration-none">
           <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
         </a>
-      </div>
+        
 
+
+
+
+    <form class="d-flex" role="search" action="" >
+      <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+        
+        
+
+      </div>
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
 
-
-        <li><a href="{% url 'books' %}" class="nav-link px-2 link-secondary" >წიგნები</a></li>
-        <li><a href="{% url 'series' %}" class="nav-link px-2">სერიები</a></li>
-        <li><a href="{% url 'authors' %}" class="nav-link px-2">ავტორები</a></li>
+        <li><a href="{% url 'books' %}" class="nav-link px-2 link-secondary">წიგნები</a></li>
+        <li><a href="{% url 'series' %}" class="nav-link px-2 link-secondary">სერიები</a></li>
+        <li><a href="{% url 'authors' %}" class="nav-link px-2 link-secondary">ავტორები</a></li>
+        <li><a href="{% url 'about' %}" class="nav-link px-2 link-secondary">ჩვენ შესახებ</a></li>
 
         {% if request.user.is_authenticated %}
-        <li><a href="{% url 'profile' user.id %}" class="nav-link px-2">კალათა</a></li>
-        {%endif%}
-        <li><a href="{% url 'about' %}" class="nav-link px-2">ჩვენ შესახებ</a></li>
+        <li><a href="{% url 'profile' user.id %}" class="nav-link px-2 link-secondary">კალათა</a></li>
+        {% endif %}
       </ul>
 
       <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
+        <button type="button" class="btn btn-outline me-2 link-light" style="background-color: #999999">Login</button>
+        <button type="button" class="btn btn-outline me-2 link-light" style="background-color: #4f4f4f">Sign-up</button>
       </div>
     </header>
-  </div>
+</div>

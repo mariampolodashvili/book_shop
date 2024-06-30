@@ -9,33 +9,33 @@
       <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class="active" aria-current="true"></button>
     </div>
     <div class="carousel-inner" >
-      <div class="carousel-item" style="background-image: url('../../static/clasic.jpg');">
+      <div class="carousel-item" style="background-image: url('../../static/images/clasic.jpg');">
         <svg class="bd-placeholder-img" width="100%" height="500px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
         <div class="container">
           <div class="carousel-caption text-start">
             <h1>Short classics</h1>
             <p class="opacity-75">News for lovers of classics</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Show the catalog</a></p>
+            <p><a href="#" class="btn btn-outline me-2 link-light" style="background-color: #999999">Show the catalog</a></p>
           </div>
         </div>
       </div>
-      <div class="carousel-item" style="background-image: url('../../static/kids.jpg');">
+      <div class="carousel-item" style="background-image: url('../../static/images/kids.jpg');">
         <svg class="bd-placeholder-img" width="100%" height="500px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
         <div class="container">
           <div class="carousel-caption">
             <h1>New books for kids</h1>
             <p>Discover new adventures</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Show the catalog</a></p>
+            <p><a href="#" class="btn btn-outline me-2 link-light" style="background-color: #999999">Show the catalog</a></p>
           </div>
         </div>
       </div>
-      <div class="carousel-item active"  style="background-image: url('../../static/discount.jpg');">
+      <div class="carousel-item active"  style="background-image: url('../../static/images/discount.jpg');">
         <svg class="bd-placeholder-img" width="100%" height="500px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
         <div class="container">
           <div class="carousel-caption text-end">
             <h1>Get 40% discount</h1>
             <p>Take advantage of offers on selected books</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Show the catalog</a></p>
+            <p><a  href="#" class="btn btn-outline me-2 link-light" style="background-color: #999999">Show the catalog</a></p>
           </div>
         </div>
       </div>
@@ -50,24 +50,41 @@
     </button>
   </div>
 
-  <h1 style="padding: 50px;">Bestsellers</h1>
+  <h1 style="padding: 50px; color: black">Bestsellers</h1>
 
+<!-- base/home.html -->
+<style>
+  .card-custom {
+    max-width: 14rem; /* Adjust the width as needed */
+    margin: auto; /* Center the card within the column */
+  }
+</style>
 
-<div style="display: flex;">
-  {% for book in books %}
-  <div class="card" style="width: 18rem; margin-left: 30px;">
-  <img src="{{ book.picture }}" class="card-img-top" alt="...">
-  <div class="card-body" style="padding: 40px;">
-    <h5 class="card-title">{{book.name}}</h5>
-    <h6>{{book.author}}</h6>
-    <p class="card-text">{{book.description}}</p>
-    <a href="#" class="btn btn-primary">Show</a>
-  </div>
-    </div>
-
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+  {% for bestseller in bestseller_books %}
+    {% for book in bestseller.books.all %}
+      <div class="col">
+        <div class="card card-custom shadow-sm">
+          <img src="{{ book.picture }}" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="Book Image">
+          <div class="card-body">
+            <h5 class="card-title">{{ book.name }}</h5>
+            <h6 class="text-muted">{{ book.author.name }}</h6>
+            <p class="card-text">{{ book.price }} $</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Add to cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
   {% endfor %}
-
 </div>
+
+
+
 
  {% endblock %}
 

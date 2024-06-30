@@ -1,0 +1,57 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    .home-container {
+        display: grid;
+        grid-template-columns: 1fr 5fr;
+    }
+
+    .genres {
+        margin: 50px 30px;
+    }
+</style>
+
+<div class="home-container">
+    <div class="genres">
+        <h3>Genres:</h3>
+        <br>
+        <a href="{{request.path}}">ALL</a>
+        {% for genre in genres %}
+            <hr>
+            <a href="{{ request.path }}?search={{ genre }}">{{ genre }}</a>
+        {% endfor %}
+    </div>
+
+
+<style>
+  .card-custom {
+    max-width: 14rem; /* Adjust the width as needed */
+    margin: auto; /* Center the card within the column */
+  }
+</style>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+  {% for book in books %}
+  <div class="col">
+    <div class="card card-custom shadow-sm">
+      <img src="{{ book.picture }}" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="Book Image">
+      <div class="card-body">
+        <h5 class="card-title">{{ book.name }}</h5>
+        <h6 class="text-muted">{{ book.author }}</h6>
+        <p class="card-text">{{ book.price }} $</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+ {% endblock %}
