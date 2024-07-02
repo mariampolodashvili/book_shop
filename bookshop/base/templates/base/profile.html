@@ -6,21 +6,30 @@
   <h1 style="padding: 50px;">My Cart</h1>
 
 
-<div style="display: flex;">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
   {% for book in books %}
-  <div class="card" style="width: 18rem; margin-left: 30px;">
-  <img src="{{ book.picture }}" class="card-img-top" alt="...">
-  <div class="card-body" style="padding: 40px;">
-    <h5 class="card-title">{{book.name}}</h5>
-    <h6>{{book.author}}</h6>
-    <p class="card-text">{{book.description}}</p>
-    <a href="#" class="btn btn-primary">Show</a>
-  </div>
+  <div class="col">
+    <div class="card card-custom shadow-sm">
+      <img src="{{ book.picture }}" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="Book Image">
+      <div class="card-body">
+        <h5 class="card-title">{{ book.name }}</h5>
+        <h6 class="text-muted">{{ book.author }}</h6>
+        <p class="card-text">{{ book.price }} $</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            <a href="{% url 'delete' book.id %}">
+                <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
+              </a>
+          </div>
+        </div>
+      </div>
     </div>
-
+  </div>
   {% endfor %}
-
 </div>
+
+
 
  {% endblock %}
 
