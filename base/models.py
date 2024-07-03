@@ -24,6 +24,7 @@ class Genre(models.Model):
 class Book(models.Model):
     picture = models.CharField(max_length=300)
     name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
     genre=models.ManyToManyField(Genre, related_name="books", blank=True)
     author = models.ForeignKey(Author, on_delete=models.SET("Unknown Author"))
     price = models.FloatField(max_length=200)
