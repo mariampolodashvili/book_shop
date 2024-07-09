@@ -4,6 +4,7 @@ from .models import Book, User, Bestsellers, Series, Author, Genre
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .forms import MyUserCreationForm, BookForm
 
 
 def home(request):
@@ -112,4 +113,44 @@ def logout_user(request):
 
 
 def registration(request):
-    return render(request, 'base/registration.html')
+    form=MyUserCreationForm()
+
+    if request.method == 'POST':
+        form = MyUserCreationForm(request.POST)
+        if form.is_valid():
+            user=form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('profile', user.id)
+
+        else:
+            pass
+
+
+    context = {'form': form}
+    return render(request, 'base/registration.html', context)
+
+def add_book(request):
+    authors = Author.objects.all()
+    genres =Genre.objects.all()
+    form=BookForm()
+
+    if request.method =='POST':
+        book_author=request.POST.get('author')
+        book_genre=request.POST.get('genre')
+
+        author, created = Author.objects.get_or_create(name=book_author)
+        genre, created = Genre.objects.get_or_create(name=book_genre)
+
+        form = BookForm(request.POST)
+
+        new_book = Book(picture=request.FILES['picture'], name=form.data['name'], author=author,
+                        description=form.data['description'], price=form.data['price'])
+        new_book.save()
+        new_book.genre.add(genre)
+        return redirect('books')
+
+
+    context={'form': form, 'authors': authors, 'genres':genres}
+    return render(request, 'base/add_book.html', context)

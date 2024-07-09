@@ -5,11 +5,75 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 5fr;
+        grid-template-columns: 1fr 3fr; /* Adjusted grid-template-columns for better balance */
+        gap: 20px; /* Added gap between grid items for better spacing */
     }
 
     .genres {
-        margin: 50px 30px;
+        margin: 20px; /* Reduced margin for better alignment */
+        padding: 20px; /* Added padding for better readability */
+        background-color: #f0f0f0; /* Soft background color for contrast */
+        border-radius: 8px; /* Rounded corners for aesthetics */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle box shadow for depth */
+    }
+
+    .genres h3 {
+        font-size: 1.5rem; /* Increased font size for headings */
+        margin-bottom: 10px; /* Adjusted margin for spacing */
+    }
+
+    .genres a {
+        display: block;
+        margin-bottom: 5px; /* Added margin between genre links */
+        color: #333; /* Darkened link color for readability */
+        text-decoration: none; /* Removed underline for cleaner look */
+    }
+
+    .genres a:hover {
+        text-decoration: underline; /* Underline on hover for interactive feel */
+    }
+
+    .card-custom {
+        margin-bottom: 20px; /* Added bottom margin for spacing between cards */
+        border: 1px solid #e0e0e0; /* Soft border for separation */
+        border-radius: 8px; /* Rounded corners for aesthetics */
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition effects */
+        display: flex; /* Use flexbox to align items */
+        flex-direction: column; /* Ensure children stack vertically */
+        height: 100%; /* Ensure each card takes up full height */
+    }
+
+    .card-custom:hover {
+        transform: translateY(-5px); /* Lift card on hover for interactive effect */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Enhanced box shadow on hover */
+    }
+
+    .card-custom .card-title {
+        font-size: 1.1rem; /* Increased font size for card title */
+        margin-bottom: 5px; /* Adjusted margin for spacing */
+    }
+
+    .card-custom .card-text {
+        font-size: 0.9rem; /* Reduced font size for card text */
+        color: #666; /* Lightened text color for readability */
+        flex-grow: 1; /* Allow text to expand vertically */
+    }
+
+    .card-custom .btn {
+        font-size: 0.8rem; /* Reduced font size for buttons */
+        padding: 8px 16px; /* Increased padding for button size */
+        border-radius: 5px; /* Rounded corners for buttons */
+        transition: background-color 0.3s ease; /* Smooth transition for background color */
+    }
+
+    .card-custom .btn-outline-secondary {
+        color: #333; /* Darkened text color for contrast */
+        border: 1px solid #ccc; /* Light border for contrast */
+        background-color: transparent; /* Transparent background */
+    }
+
+    .card-custom .btn-outline-secondary:hover {
+        background-color: #f0f0f0; /* Light background on hover for interaction */
     }
 </style>
 
@@ -17,61 +81,40 @@
     <div class="genres">
         <h3>Genres:</h3>
         <br>
-        <a href="{{request.path}}">ALL</a>
+        <a href="{{ request.path }}">ALL</a>
         {% for genre in genres %}
             <hr>
             <a href="{{ request.path }}?search={{ genre }}">{{ genre }}</a>
         {% endfor %}
     </div>
 
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+    {% for book in books %}
+    <div class="col">
+        <div class="card card-custom shadow-sm">
+            <img src="{{ book.picture.url }}" class="card-img-top img-fluid" style="height: 300px; object-fit: cover;" alt="Book Image">
 
-<style>
-  .card-custom {
-    max-width: 14rem; /* Adjust the width as needed */
-    margin: auto; /* Center the card within the column */
-  }
-</style>
-
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
-  {% for book in books %}
-  <div class="col">
-    <div class="card card-custom shadow-sm">
-      <img src="{{ book.picture }}" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="Book Image">
-      <div class="card-body">
-        <h5 class="card-title">{{ book.name }}</h5>
-        <h6 class="text-muted">{{ book.author }}</h6>
-        <p class="card-text">{{ book.price }} $</p>
-
-
-
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="btn-group">
-
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-
-              {% if request.user.is_authenticated %}
-                    {% if book in request.user.books.all %}
-                        <a href="{% url 'delete' book.id %}">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                        </a>
-                    {% else %}
-                        <a href="{% url 'adding' book.id %}">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Add to cart</button>
-                        </a>
-                    {% endif %}
-
-              {%endif%}
-          </div>
+            <div class="card-body flex-column" style="height: 130px">
+                <h5 class="card-title">{{ book.name }}</h5>
+                <h6 class="text-muted">{{ book.author }}</h6>
+                <p class="card-text">{{ book.price }} $</p>
+                <div class="mt-auto">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-secondary btn-sm">View</button>
+                        {% if request.user.is_authenticated %}
+                            {% if book in request.user.books.all %}
+                                <a href="{% url 'delete' book.id %}" class="btn btn-outline-secondary btn-sm ms-2">Delete</a>
+                            {% else %}
+                                <a href="{% url 'adding' book.id %}" class="btn btn-outline-secondary btn-sm ms-2">Add to cart</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-
-
-      </div>
-
-
     </div>
-  </div>
-  {% endfor %}
+    {% endfor %}
 </div>
 
+{% endblock %}
 
- {% endblock %}

@@ -22,13 +22,14 @@ class Genre(models.Model):
         return self.name
 
 class Book(models.Model):
-    picture = models.CharField(max_length=300)
+    picture = models.ImageField(null=True, blank=True)
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     genre=models.ManyToManyField(Genre, related_name="books", blank=True)
     author = models.ForeignKey(Author, on_delete=models.SET("Unknown Author"))
     price = models.FloatField(max_length=200)
-    content = models.CharField(max_length=200)
+
+
 
 
     def __str__(self):

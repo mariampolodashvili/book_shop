@@ -1,7 +1,85 @@
 {% extends 'main.html' %}
 
 {% block content %}
+<style>
+
+  .header-img {
+    width: 100%;
+    height: 300px;
+    background-image: url('https://example.com/header-image.jpg'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  .header-text {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 10px;
+  }
+  .section-title {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .team-member {
+    text-align: center;
+  }
+  .team-member img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+  }
+</style>
 
 
+<div class="container my-5">
+  <!-- Mission Section -->
+  <div class="row">
+    <div class="col-12">
+      <h2 class="section-title">Our Mission</h2>
+      <p>At Bookshop Magazine, our mission is to cultivate a love of reading and literature in our community. We aim to connect readers with their next favorite book and provide a space for discussion and discovery of diverse genres and authors.</p>
+    </div>
+  </div>
 
-{%endblock%}
+  <!-- History Section -->
+  <div class="row">
+    <div class="col-12">
+      <h2 class="section-title">Our History</h2>
+      <p>Bookshop Magazine was founded in 2005 by a group of passionate book enthusiasts. Over the years, we have grown into a trusted source for book reviews, author interviews, and literary news. Our commitment to quality and community has made us a beloved fixture in the book world.</p>
+    </div>
+  </div>
+
+  <!-- Values Section -->
+  <div class="row">
+    <div class="col-12">
+      <h2 class="section-title">Our Values</h2>
+      <p>We believe in the power of books to inspire, educate, and entertain. Our core values include:</p>
+      <ul>
+        <li>Promoting diverse voices and perspectives</li>
+        <li>Encouraging a lifelong love of reading</li>
+        <li>Supporting local authors and bookstores</li>
+        <li>Providing honest and thoughtful book reviews</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- Contact Section -->
+   <div class="container">
+  <footer class="py-3 my-4">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+    </ul>
+    <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+  </footer>
+</div>
+
+{% endblock %}
