@@ -1,0 +1,50 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+    .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+    }
+    .author-detail {
+        background: #fff;
+        padding: 20px;
+        margin-top: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: flex-start;
+    }
+    .author-detail img {
+        max-width: 200px;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+    .author-info {
+        flex-grow: 1;
+    }
+    .author-info h1 {
+        color: #333;
+        margin-top: 0;
+    }
+    .author-info p {
+        line-height: 1.6;
+        margin: 10px 0;
+        color: #666;
+    }
+</style>
+
+<div class="container">
+    <div class="author-detail">
+        <img src="{{ author.picture }}" alt="{{ author.name }}">
+        <div class="author-info">
+            <h1>{{ author.name }}</h1>
+            <p><strong>Born:</strong> {{ author.birth }}</p>
+            <p><strong>Died:</strong> {{ author.death }}</p>
+            <p><strong>Country:</strong> {{ author.country }}</p>
+            <p>{{ author.description }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

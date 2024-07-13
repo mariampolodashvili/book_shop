@@ -1,0 +1,73 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+    .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+    }
+    .book-detail {
+        background: #fff;
+        padding: 20px;
+        margin-top: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: flex-start;
+    }
+    .book-detail img {
+        max-width: 200px;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+    .book-info {
+        flex-grow: 1;
+    }
+    .book-info h1 {
+        color: #333;
+        margin-top: 0;
+    }
+    .book-info p {
+        line-height: 1.6;
+        margin: 10px 0;
+        color: #666;
+    }
+    .book-info .price {
+        font-size: 1.5em;
+        color: #e8491d;
+        margin-top: 20px;
+    }
+    .buttons {
+        margin-top: 20px;
+    }
+    .buttons button {
+        background-color: #e8491d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-right: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        border-radius: 5px;
+    }
+    .buttons button:hover {
+        background-color: #c7431a;
+    }
+</style>
+
+<div class="container">
+    <div class="book-detail">
+        <img src="{{ book.picture.url }}" alt="{{ book.name }}">
+        <div class="book-info">
+            <h1>{{ book.name }}</h1>
+            <a href="{% url 'author' author.id %}"> <p><strong>Author:</strong> {{ book.author }}</p> </a>
+            <p>{{ book.description }}</p>
+            <p class="price">{{ book.price }}$</p>
+            <div class="buttons">
+             <a href="{% url 'adding' book.id %}"> <button  type="button">Add to Cart</button> </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
