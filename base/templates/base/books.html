@@ -40,7 +40,8 @@
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition effects */
         display: flex; /* Use flexbox to align items */
         flex-direction: column; /* Ensure children stack vertically */
-        height: 100%; /* Ensure each card takes up full height */
+        height: 95%; /* Ensure each card takes up full height */
+        position: relative; /* Relative position for absolute positioning of buttons */
     }
 
     .card-custom:hover {
@@ -59,28 +60,52 @@
         flex-grow: 1; /* Allow text to expand vertically */
     }
 
+    .card-custom .card-img-top {
+        position: relative; /* Position relative for absolute positioning of overlay */
+    }
+
+    .card-custom .card-img-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+        opacity: 0; /* Hidden by default */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; /* Stack buttons vertically */
+        transition: opacity 0.3s ease; /* Smooth transition */
+    }
+
+    .card-custom:hover .card-img-overlay {
+        opacity: 1; /* Show on hover */
+    }
+
     .card-custom .btn {
         font-size: 0.8rem; /* Reduced font size for buttons */
         padding: 8px 16px; /* Increased padding for button size */
         border-radius: 5px; /* Rounded corners for buttons */
         transition: background-color 0.3s ease; /* Smooth transition for background color */
+        margin: 5px; /* Margin between buttons */
     }
 
     .card-custom .btn-outline-secondary {
-        color: #333; /* Darkened text color for contrast */
+        color: #fff; /* Light text color for contrast */
         border: 1px solid #ccc; /* Light border for contrast */
         background-color: transparent; /* Transparent background */
     }
 
     .card-custom .btn-outline-secondary:hover {
         background-color: #f0f0f0; /* Light background on hover for interaction */
+        color: #333; /* Dark text color on hover */
     }
 </style>
 
 <div class="home-container">
     <div class="genres">
         <h3>Genres:</h3>
-        <br>
         <a href="{{ request.path }}">ALL</a>
         {% for genre in genres %}
             <hr>
@@ -88,33 +113,41 @@
         {% endfor %}
     </div>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-    {% for book in books %}
-    <div class="col">
-        <div class="card card-custom shadow-sm">
-            <img src="{{ book.picture.url }}" class="card-img-top img-fluid" style="height: 300px; object-fit: cover;" alt="Book Image">
-
-            <div class="card-body flex-column" style="height: 130px">
-                <h5 class="card-title">{{ book.name }}</h5>
-                <h6 class="text-muted">{{ book.author }}</h6>
-                <p class="card-text">{{ book.price }} $</p>
-                <div class="mt-auto">
-                    <div class="btn-group">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+        {% for book in books %}
+        <div class="col">
+            <div class="card card-custom shadow-sm">
+                <img src="{{ book.picture.url }}" class="card-img-top img-fluid" style="height: 300px; object-fit: cover;" alt="Book Image">
+                <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
+                    <a href="{% url 'book' book.id %}">
                         <button type="button" class="btn btn-outline-secondary btn-sm">View</button>
-                        {% if request.user.is_authenticated %}
-                            {% if book in request.user.books.all %}
-                                <a href="{% url 'delete' book.id %}" class="btn btn-outline-secondary btn-sm ms-2">Delete</a>
-                            {% else %}
-                                <a href="{% url 'adding' book.id %}" class="btn btn-outline-secondary btn-sm ms-2">Add to cart</a>
-                            {% endif %}
+                    </a>
+                    {% if request.user.is_authenticated %}
+                        {% if book in request.user.books.all %}
+                            <a href="{% url 'delete' book.id %}">
+                                <button type="button" class="btn btn-outline-secondary btn-sm">Delete</button>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'adding' book.id %}">
+                                <button type="button" class="btn btn-outline-secondary btn-sm">Add to cart</button>
+                            </a>
                         {% endif %}
-                    </div>
+                        {% if request.user == book.creator %}
+                            <a href="{% url 'drop' book.id %}">
+                                <button type="button" class="btn btn-outline-secondary btn-sm">Drop</button>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.name }}</h5>
+                    <h6 class="text-muted">{{ book.author }}</h6>
+                    <p class="card-text">{{ book.price }} $</p>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 
 {% endblock %}
-

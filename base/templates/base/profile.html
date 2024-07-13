@@ -4,13 +4,15 @@
 
 <style>
     .card-img-top {
-            height: 300px; /* Adjust this value to your desired height */
-            object-fit: cover; /* Ensures the image covers the entire space */
-        }
+        height: 300px; /* Adjust this value to your desired height */
+        object-fit: cover; /* Ensures the image covers the entire space */
+    }
+
     .card-custom {
         border: none; /* Remove default border */
         transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition effects */
         height: 100%; /* Ensure card takes up full height */
+        position: relative; /* Relative position for absolute positioning of buttons */
     }
 
     .card-custom:hover {
@@ -35,34 +37,42 @@
         margin-bottom: 10px; /* Bottom margin */
     }
 
-    .btn-custom {
+    .card-custom .card-img-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+        opacity: 0; /* Hidden by default */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; /* Stack buttons vertically */
+        transition: opacity 0.3s ease; /* Smooth transition */
+    }
+
+    .card-custom:hover .card-img-overlay {
+        opacity: 1; /* Show on hover */
+    }
+
+    .card-custom .btn {
         font-size: 0.9rem; /* Button font size */
         padding: 8px 16px; /* Padding for buttons */
         border-radius: 5px; /* Rounded corners */
         transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition effects */
-        background-color: #007bff; /* Blue background */
-        color: #fff; /* White text color */
-        border: 1px solid #007bff; /* Blue border */
+        margin: 5px; /* Margin between buttons */
     }
 
-    .btn-custom:hover {
-        background-color: #0056b3; /* Darker blue background on hover */
-        border-color: #0056b3; /* Darker blue border on hover */
+    .card-custom .btn-outline-secondary {
+        color: #fff;
+        border: 1px solid #ccc;
+        background-color: transparent;
     }
 
-    .btn-outline-custom {
-        font-size: 0.9rem; /* Button font size */
-        padding: 8px 16px; /* Padding for buttons */
-        border-radius: 5px; /* Rounded corners */
-        transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition effects */
-        background-color: transparent; /* Transparent background */
-        color: #007bff; /* Blue text color */
-        border: 1px solid #007bff; /* Blue border */
-    }
-
-    .btn-outline-custom:hover {
-        background-color: #007bff; /* Blue background on hover */
-        color: #fff; /* White text color on hover */
+    .card-custom .btn-outline-secondary:hover {
+        background-color: #f0f0f0;
+        color: #333;
     }
 </style>
 
@@ -74,14 +84,18 @@
         <div class="col mb-4">
             <div class="card card-custom shadow-sm h-100">
                 <img src="{{ book.picture.url }}" class="card-img-top" alt="Book Image">
+                <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
+                    <a href="{% url 'book' book.id %}">
+                        <button type="button" class="btn btn-outline-secondary btn-sm">View</button>
+                    </a>
+                    <a href="{% url 'delete' book.id %}">
+                        <button type="button" class="btn btn-outline-secondary btn-sm">Delete</button>
+                    </a>
+                </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ book.name }}</h5>
                     <h6 class="text-muted">{{ book.author }}</h6>
                     <p class="card-text">{{ book.price }} $</p>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-secondary ">View</button>
-                        <a href="{% url 'delete' book.id %}" class="btn btn-outline-secondary">Delete</a>
-                    </div>
                 </div>
             </div>
         </div>

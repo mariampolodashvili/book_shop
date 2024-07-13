@@ -16,5 +16,10 @@ urlpatterns = [
     path('login_user/', views.login_user, name="login"),
     path('logout_user/', views.logout_user, name="logout"),
     path('registration/', views.registration, name="registration"),
-    path('add/', views.add_book, name='add')
+    path('add/', views.add_book, name='add'),
+    path('book/<str:id>', views.book, name='book'),
+    path('author/<str:id>', views.author, name='author'),
+    path('serie/<int:id>', views.serie, name='serie'),
+    path('drop/<str:id>', views.drop, name='drop'),
+
 ]

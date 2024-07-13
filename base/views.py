@@ -5,10 +5,12 @@ from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import MyUserCreationForm, BookForm
-
+from .seeder import seeder_dunc
+from django.contrib import messages
 
 def home(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
+    seeder_dunc()
     if search:
         books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
         context = {"books": books}
@@ -22,6 +24,7 @@ def home(request):
 def books(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) )
+    books = list(dict.fromkeys(books))
     genres=Genre.objects.all()
     context = {"books": books, 'genres': genres}
     return render(request, 'base/books.html', context)
@@ -87,6 +90,15 @@ def delete(request, id):
 
     return render(request, 'base/delete.html', {'obj': obj} )
 
+@login_required(login_url='login')
+def drop(request, id):
+    book =Book.objects.get(id=id)
+    if request.method=='POST':
+        book.picture.delete()
+        book.delete()
+        return redirect('home')
+    return render(request, 'base/delete.html', {'book': book })
+
 def login_user(request):
     if request.user.is_authenticated:
         return redirect('profile', request.user.id)
@@ -97,14 +109,14 @@ def login_user(request):
         try:
             user=User.objects.get(username=username)
         except:
-            pass
+            messages.error(request, 'User does not exist!')
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('profile', request.user.id)
         else:
-            pass
+            messages.error(request, 'User or Password is not exist!')
     return render(request, 'base/login.html')
 
 def logout_user(request):
@@ -125,7 +137,7 @@ def registration(request):
             return redirect('profile', user.id)
 
         else:
-            pass
+            messages.error(request, 'Follow the instructions and create proper user and password')
 
 
     context = {'form': form}
@@ -146,7 +158,7 @@ def add_book(request):
         form = BookForm(request.POST)
 
         new_book = Book(picture=request.FILES['picture'], name=form.data['name'], author=author,
-                        description=form.data['description'], price=form.data['price'])
+                        description=form.data['description'], price=form.data['price'], creator=request.user )
         new_book.save()
         new_book.genre.add(genre)
         return redirect('books')
@@ -154,3 +166,16 @@ def add_book(request):
 
     context={'form': form, 'authors': authors, 'genres':genres}
     return render(request, 'base/add_book.html', context)
+
+
+def book(request, id):
+    book = Book.objects.get(id=id)
+    author=Author.objects.get(name=book.author)
+    return  render(request, 'base/book.html', {'book': book, 'author': author})
+
+def author(request, id):
+    author = Author.objects.get(id=id)
+    return render(request, 'base/author.html', {'author': author})
+
+def serie(request, id):
+    return render(request, 'base/serie.html')
