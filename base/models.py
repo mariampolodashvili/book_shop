@@ -50,7 +50,6 @@ class Bestsellers(models.Model):
     books=models.ManyToManyField(Book, related_name='bestseller_books', blank=True)
 
 
-
 class Series(models.Model):
     title=models.CharField(max_length=200)
     picture = models.CharField(max_length=300)
@@ -67,3 +66,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.body
+
+
