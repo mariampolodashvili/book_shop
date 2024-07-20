@@ -51,24 +51,34 @@
 
 <style>
     .card-custom {
-        border: none;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 85%;
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        height: 95%;
         position: relative;
-        border-radius: 10px;
-        overflow: hidden;
-        background: #f8f9fa;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .card-custom:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-custom .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .card-custom .card-text {
+        font-size: 0.9rem;
+        color: #666;
+        flex-grow: 1;
     }
 
     .card-custom .card-img-top {
-        height: 300px; /* Increased height for the image */
-        object-fit: cover;
+        position: relative;
     }
 
     .card-custom .card-img-overlay {
@@ -90,37 +100,11 @@
         opacity: 1;
     }
 
-    .card-custom .card-body {
-        padding: 1.25rem;
-        height: 200px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card-custom .card-title {
-        font-size: 1.2rem;
-        color: #343a40;
-        margin-bottom: 0.5rem;
-    }
-
-    .card-custom .text-muted {
-        font-size: 0.9rem;
-        color: #6c757d;
-        margin-bottom: 0.75rem;
-    }
-
-    .card-custom .card-text {
-        font-size: 1rem;
-        color: #343a40;
-        margin-bottom: 1rem;
-        flex-grow: 1;
-    }
-
     .card-custom .btn {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         padding: 8px 16px;
         border-radius: 5px;
-        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        transition: background-color 0.3s ease;
         margin: 5px;
     }
 
@@ -133,6 +117,32 @@
     .card-custom .btn-outline-secondary:hover {
         background-color: #f0f0f0;
         color: #333;
+    }
+
+    .card-footer-custom {
+        background-color: #f8f9fa;
+        border-top: 1px solid #e0e0e0;
+        padding: 10px 15px;
+        border-radius: 0 0 8px 8px;
+        text-align: center;
+    }
+
+    .card-footer-custom h5 {
+        font-size: 1rem;
+        margin: 0;
+        color: #333;
+    }
+
+    .card-footer-custom h6 {
+        font-size: 0.9rem;
+        margin: 0;
+        color: #666;
+    }
+
+    .card-footer-custom p {
+        font-size: 0.8rem;
+        margin: 5px 0 0;
+        color: #28a745;
     }
 
     .bestsellers-heading {
@@ -150,7 +160,7 @@
             {% for book in bestseller.books.all %}
                 <div class="col mb-4">
                     <div class="card card-custom shadow-sm">
-                        <img src="{{ book.picture.url }}" class="card-img-top" alt="Book Image">
+                        <img src="{{ book.picture.url }}" class="card-img-top img-fluid" style="height: 300px; object-fit: cover;" alt="Book Image">
                         <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
                             <a href="{% url 'book' book.id %}">
                                 <button type="button" class="btn btn-outline-secondary btn-sm">View</button>
@@ -159,10 +169,10 @@
                                 <button type="button" class="btn btn-outline-secondary btn-sm">Add to Cart</button>
                             </a>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ book.name }}</h5>
-                            <h6 class="text-muted">{{ book.author.name }}</h6>
-                            <p class="card-text">{{ book.price }} $</p>
+                        <div class="card-footer-custom">
+                            <h5>{{ book.name }}</h5>
+                            <h6>{{ book.author.name }}</h6>
+                            <p>{{ book.price }} $</p>
                         </div>
                     </div>
                 </div>
@@ -171,6 +181,6 @@
     </div>
 </div>
 
-<a style="padding: 30px" href="{% url 'add' %}"><button>Add Book</button></a>
+
 
 {% endblock %}

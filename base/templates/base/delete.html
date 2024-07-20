@@ -1,19 +1,56 @@
 {% extends 'main.html' %}
 
-{% block title %} <title> Delete Page</title> {% endblock %}
-
+{% block title %} <title>Delete Page</title> {% endblock %}
 
 {% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 20px;
+    }
 
-<h1>Delete Page Html</h1>
-<form method="POST" action="">
-    {% csrf_token %}
-    <p>Are you sure you want to delete "{{ obj }}"?</p>
-    <input type="submit" value="delete">
+    h1 {
+        color: #333;
+    }
 
+    .delete-form {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 400px;
+        margin: auto;
+        text-align: center;
+    }
 
+    .delete-form p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
 
-</form>
+    .delete-form input[type="submit"] {
+        background-color: #d9534f; /* Bootstrap danger color */
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
 
+    .delete-form input[type="submit"]:hover {
+        background-color: #c9302c; /* Darker red on hover */
+    }
+</style>
 
-{%endblock%}
+<div class="delete-form">
+    <h1>Delete Page</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <p>Are you sure you want to delete "{{ obj }}"?</p>
+        <input type="submit" value="Delete">
+    </form>
+</div>
+{% endblock %}

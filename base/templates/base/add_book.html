@@ -1,66 +1,107 @@
 {% extends 'main.html' %}
 
-{% block title %} <title> Add Book Page</title> {% endblock %}
+{% block title %} <title>Add Book Page</title> {% endblock %}
 
 {% block content %}
+<style>
+    .add-book-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-<h1> Adding Book: </h1>
-<form method="POST" action=""  enctype="multipart/form-data">
-    {% csrf_token %}
-    <div>
-         <label>Book Cover: </label>
-    <br>
-    {{ form.picture }}
-    </div>
-   <div>
+    .add-book-form h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
 
-       <label>Book Title: </label>
-       <br>
-       {{form.name}}
-   </div>
+    .add-book-form label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
 
-    <div>
+    .add-book-form input[type="text"],
+    .add-book-form input[type="number"],
+    .add-book-form input[type="file"],
+    .add-book-form textarea,
+    .add-book-form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-       <label>Book Price: </label>
-       <br>
-       {{form.price}}
-   </div>
+    .add-book-form input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-    <div>
-    <label> Author: </label>
-    <br>
-    <input required type="text" name="author" list="author-list">
-    <datalist id="author-list">
-        {% for author in authors %}
-        <select>
-            <option value="{{ author.name }}">{{ author.name }}</option>
-        </select>
-        {% endfor %}
-    </datalist>
+    .add-book-form input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="add-book-form">
+    <h1>Adding Book</h1>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <label>Book Cover:</label>
+            <br>
+            {{ form.picture }}
         </div>
-
-    <div>
-    <label> Genre: </label>
-    <br>
-    <input required type="text" name="genre" list="genre-list">
-    <datalist id="genre-list">
-        {% for genre in genres %}
-        <select>
-            <option value="{{ genre.name }}">{{ genre.name }}</option>
-        </select>
-        {% endfor %}
-    </datalist>
+        <div>
+            <label>Book Title:</label>
+            <br>
+            {{ form.name }}
         </div>
-
-    <div>
-        <label> Book Description: </label>
+        <div>
+            <label>Book Price:</label>
+            <br>
+            {{ form.price }}
+        </div>
+        <div>
+            <label>Author:</label>
+            <br>
+            <input required type="text" name="author" list="author-list">
+            <datalist id="author-list">
+                {% for author in authors %}
+                <option value="{{ author.name }}">{{ author.name }}</option>
+                {% endfor %}
+            </datalist>
+        </div>
+        <div>
+            <label>Genre:</label>
+            <br>
+            <input required type="text" name="genre" list="genre-list">
+            <datalist id="genre-list">
+                {% for genre in genres %}
+                <option value="{{ genre.name }}">{{ genre.name }}</option>
+                {% endfor %}
+            </datalist>
+        </div>
+        <div>
+            <label>Book Description:</label>
+            <br>
+            {{ form.description }}
+        </div>
         <br>
-        {{ form.description}}
-    </div>
-    <br>
-
-    <input type="submit" value="upload book">
-
-</form>
+        <input type="submit" value="Upload Book">
+    </form>
+</div>
 
 {% endblock %}

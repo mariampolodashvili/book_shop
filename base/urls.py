@@ -19,7 +19,9 @@ urlpatterns = [
     path('add/', views.add_book, name='add'),
     path('book/<str:id>', views.book, name='book'),
     path('author/<str:id>', views.author, name='author'),
-    path('serie/<int:id>', views.serie, name='serie'),
+    path('serie/<str:id>', views.serie, name='serie'),
     path('drop/<str:id>', views.drop, name='drop'),
+    path('update_user/', views.update_user, name='update_user'),
+    path('delete_comment/<str:id>', views.delete_comment, name='delete_comment')
 
 ]

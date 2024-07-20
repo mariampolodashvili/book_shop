@@ -42,9 +42,13 @@ class Book(models.Model):
 
 class User(AbstractUser):
     books = models.ManyToManyField(Book, related_name='books', blank=True)
+    avatar = models.ImageField(null=True, default='avatar.jpg')
+    bio = models.TextField(null=True)
+
 
 class Bestsellers(models.Model):
     books=models.ManyToManyField(Book, related_name='bestseller_books', blank=True)
+
 
 
 class Series(models.Model):
@@ -52,3 +56,14 @@ class Series(models.Model):
     picture = models.CharField(max_length=300)
     book = models.ManyToManyField(Book, related_name='book', blank=True)
 
+class Comment(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE)
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
+
+    def __str__(self):
+        return self.body
