@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Book, User, Bestsellers, Series, Author, Genre
+from .models import Book, User, Bestsellers, Series, Author, Genre, Comment
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import MyUserCreationForm, BookForm
+from .forms import MyUserCreationForm, BookForm, UserForm
 from .seeder import seeder_dunc
 from django.contrib import messages
 
@@ -63,6 +63,7 @@ def about(request):
 @login_required(login_url='login')
 def profile(request, pk):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
+    total_price=0
     if search:
         books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
         context = {"books": books}
@@ -70,7 +71,9 @@ def profile(request, pk):
     else:
         user= User.objects.get(id=pk)
         books = user.books.all()
-        context = {"books": books}
+        for book in books:
+            total_price+=book.price
+        context = {"books": books, 'total_price': total_price}
         return render(request, 'base/profile.html', context)
 
 @login_required(login_url='login')
@@ -159,8 +162,13 @@ def add_book(request):
 
         new_book = Book(picture=request.FILES['picture'], name=form.data['name'], author=author,
                         description=form.data['description'], price=form.data['price'], creator=request.user )
-        new_book.save()
-        new_book.genre.add(genre)
+
+        if not (Book.objects.filter(picture=request.FILES['picture'])):
+            new_book.save()
+            new_book.genre.add(genre)
+        else:
+            messages.error(request, 'Book with same picture already existx...')
+
         return redirect('books')
 
 
@@ -170,12 +178,45 @@ def add_book(request):
 
 def book(request, id):
     book = Book.objects.get(id=id)
+    book_comments=book.comment_set.all() #.order_by('-created')
     author=Author.objects.get(name=book.author)
-    return  render(request, 'base/book.html', {'book': book, 'author': author})
+    if request.method == "POST":
+        Comment.objects.create(
+            user = request.user,
+            book=book,
+            body=request.POST.get('body')
+        )
+    return  render(request, 'base/book.html', {'book': book, 'author': author, 'comments': book_comments})
 
 def author(request, id):
     author = Author.objects.get(id=id)
     return render(request, 'base/author.html', {'author': author})
 
 def serie(request, id):
-    return render(request, 'base/serie.html')
+    serie=Series.objects.get(id=id)
+    context={'serie':serie, 'author': author}
+    return render(request, 'base/serie.html', context)
+
+@login_required(login_url='login')
+def update_user(request):
+    user=request.user
+    form=UserForm(instance=user)
+
+    if request.method == 'POST':
+        form=UserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', user.id)
+
+
+    context = {'form': form}
+    return render(request, 'base/update_user.html', context)
+
+
+def delete_comment(request, id):
+    comment = Comment.objects.get(id=id)
+    book=comment.book
+    if request.method=='POST':
+        comment.delete()
+        return redirect('book', book.id)
+    return render(request, 'base/delete.html', {'obj' : comment} )

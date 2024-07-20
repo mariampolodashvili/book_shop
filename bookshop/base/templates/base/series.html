@@ -52,10 +52,11 @@
   <div class="col">
     <div class="custom-card" style="background-image: url('{{ serie.picture }}');">
       <div class="card-body">
-        <h5 class="card-title" >{{ serie.name }}</h5>
       </div>
       <div>
+        <a href="{% url 'serie' serie.id %}">
         <button class="btn">{{ serie.title }}</button>
+        </a>
       </div>
     </div>
   </div>

@@ -2,7 +2,6 @@
 
 {% block content %}
 <style>
-
   .header-img {
     width: 100%;
     height: 300px;
@@ -10,38 +9,75 @@
     background-size: cover;
     background-position: center;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
   .header-text {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
     color: white;
     background-color: rgba(0, 0, 0, 0.6);
     padding: 10px 20px;
     border-radius: 10px;
+    font-size: 24px;
   }
+
   .section-title {
     margin-top: 40px;
     margin-bottom: 20px;
     text-align: center;
+    font-size: 32px;
+    color: #333;
   }
+
+  .section-content {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #555;
+  }
+
   .team-member {
     text-align: center;
+    margin-bottom: 30px;
   }
+
   .team-member img {
     border-radius: 50%;
     width: 150px;
     height: 150px;
+    border: 3px solid #ddd;
+    margin-bottom: 10px;
+  }
+
+  footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    border-top: 1px solid #e9ecef;
+  }
+
+  footer .nav-link {
+    color: #6c757d;
+  }
+
+  footer .nav-link:hover {
+    color: #007bff;
+  }
+
+  footer .text-body-secondary {
+    color: #6c757d !important;
   }
 </style>
 
+<div class="header-img">
+  <div class="header-text">Welcome to Bookshop Magazine</div>
+</div>
 
 <div class="container my-5">
   <!-- Mission Section -->
   <div class="row">
     <div class="col-12">
       <h2 class="section-title">Our Mission</h2>
-      <p>At Bookshop Magazine, our mission is to cultivate a love of reading and literature in our community. We aim to connect readers with their next favorite book and provide a space for discussion and discovery of diverse genres and authors.</p>
+      <p class="section-content">At Bookshop Magazine, our mission is to cultivate a love of reading and literature in our community. We aim to connect readers with their next favorite book and provide a space for discussion and discovery of diverse genres and authors.</p>
     </div>
   </div>
 
@@ -49,7 +85,7 @@
   <div class="row">
     <div class="col-12">
       <h2 class="section-title">Our History</h2>
-      <p>Bookshop Magazine was founded in 2005 by a group of passionate book enthusiasts. Over the years, we have grown into a trusted source for book reviews, author interviews, and literary news. Our commitment to quality and community has made us a beloved fixture in the book world.</p>
+      <p class="section-content">Bookshop Magazine was founded in 2005 by a group of passionate book enthusiasts. Over the years, we have grown into a trusted source for book reviews, author interviews, and literary news. Our commitment to quality and community has made us a beloved fixture in the book world.</p>
     </div>
   </div>
 
@@ -57,8 +93,8 @@
   <div class="row">
     <div class="col-12">
       <h2 class="section-title">Our Values</h2>
-      <p>We believe in the power of books to inspire, educate, and entertain. Our core values include:</p>
-      <ul>
+      <p class="section-content">We believe in the power of books to inspire, educate, and entertain. Our core values include:</p>
+      <ul class="section-content">
         <li>Promoting diverse voices and perspectives</li>
         <li>Encouraging a lifelong love of reading</li>
         <li>Supporting local authors and bookstores</li>
@@ -66,20 +102,17 @@
       </ul>
     </div>
   </div>
-
-
-  <!-- Contact Section -->
-   <div class="container">
-  <footer class="py-3 my-4">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-    </ul>
-    <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
-  </footer>
 </div>
 
+<!-- Footer Section -->
+<footer class="py-3 my-4">
+  <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+  </ul>
+  <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+</footer>
 {% endblock %}
