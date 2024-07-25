@@ -1,0 +1,120 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    .card-img-top {
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .card-custom {
+        border: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    .card-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-custom .card-title {
+        font-size: 1.2rem;
+        color: #343a40;
+        margin-bottom: 5px;
+    }
+
+    .card-custom .text-muted {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .card-custom .card-text {
+        font-size: 1rem;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .card-custom .card-img-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        transition: opacity 0.3s ease;
+    }
+
+    .card-custom:hover .card-img-overlay {
+        opacity: 1;
+    }
+
+    .card-custom .btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        margin: 5px;
+    }
+
+    .card-custom .btn-outline-secondary {
+        color: #fff;
+        border: 1px solid #ccc;
+        background-color: transparent;
+    }
+
+    .card-custom .btn-outline-secondary:hover {
+        background-color: #f0f0f0;
+        color: #333;
+    }
+
+    .total-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #343a40;
+        text-align: right;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container py-4">
+    <h1 class="mb-4">My Cart</h1>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        {% for book in books %}
+        <div class="col mb-4">
+            <div class="card card-custom shadow-sm h-100">
+                <img src="{{ book.picture.url }}" class="card-img-top" alt="Book Image">
+                <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
+                    <a href="{% url 'book' book.id %}">
+                        <button type="button" class="btn btn-outline-secondary btn-sm">View</button>
+                    </a>
+                    <a href="{% url 'delete' book.id %}">
+                        <button type="button" class="btn btn-outline-secondary btn-sm">Delete</button>
+                    </a>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ book.name }}</h5>
+                    <h6 class="text-muted">{{ book.author }}</h6>
+                    <p class="card-text">{{ book.price }} $</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+<hr>
+    <div class="total-price">
+        Total Price: {{ total_price }} $
+    </div>
+</div>
+
+{% endblock %}
