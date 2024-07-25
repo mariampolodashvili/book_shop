@@ -117,7 +117,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('cart', request.user.id)
+            return redirect('profile', request.user.id)
         else:
             messages.error(request, 'User or Password is not exist!')
     return render(request, 'base/login.html')
@@ -137,7 +137,7 @@ def registration(request):
             user.username = user.username.lower()
             user.save()
             login(request, user)
-            return redirect('cart', user.id)
+            return redirect('profile', user.id)
 
         else:
             messages.error(request, 'Follow the instructions and create proper user and password')
@@ -146,74 +146,105 @@ def registration(request):
     context = {'form': form}
     return render(request, 'base/registration.html', context)
 
+@login_required(login_url='login')
 def add_book(request):
-    authors = Author.objects.all()
-    genres =Genre.objects.all()
-    form=BookForm()
+    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    if search:
+        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
+        context = {"books": books}
+        return render(request, 'base/books.html', context)
+    else:
+        authors = Author.objects.all()
+        genres =Genre.objects.all()
+        form=BookForm()
 
-    if request.method =='POST':
-        book_author=request.POST.get('author')
-        book_genre=request.POST.get('genre')
+        if request.method =='POST':
+            book_author=request.POST.get('author')
+            book_genre=request.POST.get('genre')
 
-        author, created = Author.objects.get_or_create(name=book_author)
-        genre, created = Genre.objects.get_or_create(name=book_genre)
+            author, created = Author.objects.get_or_create(name=book_author)
+            genre, created = Genre.objects.get_or_create(name=book_genre)
 
-        form = BookForm(request.POST)
+            form = BookForm(request.POST)
 
-        new_book = Book(picture=request.FILES['picture'], name=form.data['name'], author=author,
-                        description=form.data['description'], price=form.data['price'], creator=request.user )
+            new_book = Book(picture=request.FILES['picture'], name=form.data['name'], author=author,
+                            description=form.data['description'], price=form.data['price'], creator=request.user )
 
-        if not (Book.objects.filter(picture=request.FILES['picture'])):
-            new_book.save()
-            new_book.genre.add(genre)
-        else:
-            messages.error(request, 'Book with same picture already existx...')
+            if not (Book.objects.filter(picture=request.FILES['picture'])):
+                new_book.save()
+                new_book.genre.add(genre)
+            else:
+                messages.error(request, 'Book with same picture already existx...')
 
-        return redirect('books')
+            return redirect('books')
 
 
-    context={'form': form, 'authors': authors, 'genres':genres}
-    return render(request, 'base/add_book.html', context)
+        context={'form': form, 'authors': authors, 'genres':genres}
+        return render(request, 'base/add_book.html', context)
 
 
 def book(request, id):
-    book = Book.objects.get(id=id)
-    book_comments=book.comment_set.all() #.order_by('-created')
-    author=Author.objects.get(name=book.author)
-    if request.method == "POST":
-        Comment.objects.create(
-            user = request.user,
-            book=book,
-            body=request.POST.get('body')
-        )
-    return  render(request, 'base/book.html', {'book': book, 'author': author, 'comments': book_comments})
+    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    if search:
+        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
+        context = {"books": books}
+        return render(request, 'base/books.html', context)
+    else:
+        book = Book.objects.get(id=id)
+        book_comments=book.comment_set.all() #.order_by('-created')
+        author=Author.objects.get(name=book.author)
+        if request.method == "POST":
+            Comment.objects.create(
+                user = request.user,
+                book=book,
+                body=request.POST.get('body')
+            )
+        return  render(request, 'base/book.html', {'book': book, 'author': author, 'comments': book_comments})
 
 def author(request, id):
-    author = Author.objects.get(id=id)
-    books=Book.objects.filter(author=author)
-    return render(request, 'base/author.html', {'author': author, 'books':books})
+    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    if search:
+        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
+        context = {"books": books}
+        return render(request, 'base/books.html', context)
+    else:
+        author = Author.objects.get(id=id)
+        books=Book.objects.filter(author=author)
+        return render(request, 'base/author.html', {'author': author, 'books':books})
 
 def serie(request, id):
-    serie=Series.objects.get(id=id)
-    context={'serie':serie, 'author': author}
-    return render(request, 'base/serie.html', context)
+    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    if search:
+        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
+        context = {"books": books}
+        return render(request, 'base/books.html', context)
+    else:
+        serie=Series.objects.get(id=id)
+        context={'serie':serie, 'author': author}
+        return render(request, 'base/serie.html', context)
 
 @login_required(login_url='login')
 def update_user(request):
-    user=request.user
-    form=UserForm(instance=user)
+    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    if search:
+        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
+        context = {"books": books}
+        return render(request, 'base/books.html', context)
+    else:
+        user=request.user
+        form=UserForm(instance=user)
+        if request.method == 'POST':
+            form=UserForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                form.save()
+                return redirect('profile', user.id)
 
-    if request.method == 'POST':
-        form=UserForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('cart', user.id)
+
+        context = {'form': form}
+        return render(request, 'base/update_user.html', context)
 
 
-    context = {'form': form}
-    return render(request, 'base/update_user.html', context)
-
-
+@login_required(login_url='login')
 def delete_comment(request, id):
     comment = Comment.objects.get(id=id)
     book=comment.book
@@ -221,3 +252,17 @@ def delete_comment(request, id):
         comment.delete()
         return redirect('book', book.id)
     return render(request, 'base/delete.html', {'obj' : comment} )
+
+
+def profile(request, id):
+    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    if search:
+        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
+        context = {"books": books}
+        return render(request, 'base/books.html', context)
+    else:
+        user=User.objects.get(id=id)
+        books=Book.objects.filter(creator=user)
+        context={'user': user, 'books':books}
+        return render(request, 'base/profile.html', context)
+

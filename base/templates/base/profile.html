@@ -1,0 +1,244 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    /* Profile Header */
+    .profile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-header img {
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        margin-right: 20px;
+        border: 3px solid #e0e0e0;
+    }
+
+    .profile-header h1 {
+        font-size: 2.5rem;
+        margin: 0;
+        color: #2c3e50;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .profile-header p {
+        margin: 5px 0;
+        color: #7f8c8d;
+    }
+
+    .profile-header p:last-of-type {
+        color: #2c3e50;
+    }
+
+    .profile-header .edit-profile-btn {
+        font-size: 1rem;
+        padding: 10px 20px;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        background-color: #cccccc;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-left: auto;
+    }
+
+    .profile-header .edit-profile-btn:hover {
+        background-color: #343a40;
+    }
+
+    /* Card Custom */
+    .card-custom {
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        position: relative;
+    }
+
+    .card-custom:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-custom .card-img-top {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .card-custom .card-img-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        transition: opacity 0.3s ease;
+    }
+
+    .card-custom:hover .card-img-overlay {
+        opacity: 1;
+    }
+
+    .card-custom .btn {
+        font-size: 0.9rem;
+        padding: 10px 22px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin: 5px;
+    }
+
+    .card-custom .btn-outline-secondary {
+        color: #ffffff;
+        border: 1px solid #ffffff;
+        background-color: transparent;
+    }
+
+    .card-custom .btn-outline-secondary:hover {
+        background-color: #ffffff;
+        color: #2c3e50;
+    }
+
+    .card-footer-custom {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-top: 1px solid #e0e0e0;
+        text-align: center;
+    }
+
+    .card-footer-custom h5 {
+        font-size: 1.2rem;
+        margin: 0;
+        color: #2c3e50;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .card-footer-custom h6 {
+        font-size: 1rem;
+        margin: 5px 0 10px;
+        color: #7f8c8d;
+    }
+
+    .card-footer-custom p {
+        font-size: 1rem;
+        margin: 0;
+        color: #27ae60;
+    }
+
+    /* Section Header */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 30px 0 20px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        color: #333;
+        border-bottom: 2px solid #cccccc;
+        display: inline-block;
+        padding-bottom: 5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .btn-add-book {
+        font-size: 1rem;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #cccccc;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-add-book:hover {
+        background-color: #343a40;
+    }
+
+
+
+
+</style>
+
+<div style="margin: 15px">
+
+<div class="profile-header">
+    <div style="display: flex; align-items: center;">
+        <img src="{{ user.avatar.url }}" alt="User Avatar">
+        <div>
+            <h1>{{ user.username }}</h1>
+            <p>{{ user.email }}</p>
+            <p>{{ user.bio }}</p>
+        </div>
+    </div>
+    {% if request.user == user %}
+    <a href="{% url 'update_user' %}">
+        <button class="edit-profile-btn">Edit Profile</button>
+    </a>
+    {% endif %}
+</div>
+    <br>
+
+<div class="section-header">
+    <h2 class="section-title">Books Added by {{ user.username }}</h2>
+    <a href="{% url 'add' %}">
+        <button class="btn-add-book" style="margin: 20px">Add Book</button>
+    </a>
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+    {% for book in books %}
+    <div class="col">
+        <div class="card-custom">
+            <img class="card-img-top" src="{{ book.picture.url }}" alt="{{ book.name }}">
+            <div class="card-img-overlay">
+                <a href="{% url 'book' book.id %}">
+                    <button class="btn btn-outline-secondary view-button">View</button>
+                </a>
+                {% if request.user.is_authenticated %}
+                    {% if book in request.user.books.all %}
+                        <a href="{% url 'delete' book.id %}">
+                            <button class="btn btn-outline-secondary delete-button">Delete</button>
+                        </a>
+                    {% else %}
+                {% if user.id != request.user.id %}
+                        <a href="{% url 'adding' book.id %}">
+                            <button class="btn btn-outline-secondary add-to-cart-button">Add to cart</button>
+                        </a>
+                {% endif %}
+                    {% endif %}
+                    {% if request.user == book.creator %}
+                        <a href="{% url 'drop' book.id %}">
+                            <button class="btn btn-outline-secondary drop-button">Drop</button>
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="card-footer-custom">
+                <h5>{{ book.name }}</h5>
+                <h6>{{ book.author }}</h6>
+                <p>{{ book.price }} $</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

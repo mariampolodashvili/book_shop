@@ -17,4 +17,4 @@ class BookForm(ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model=User
-        fields=['avatar', 'username', 'email', 'bio', 'books']
+        fields=['avatar', 'username', 'email', 'bio']
