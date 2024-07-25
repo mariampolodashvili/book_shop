@@ -40,7 +40,7 @@
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition effects */
         display: flex; /* Use flexbox to align items */
         flex-direction: column; /* Ensure children stack vertically */
-        height: 95%; /* Ensure each card takes up full height */
+
         position: relative; /* Relative position for absolute positioning of buttons */
     }
 
@@ -137,7 +137,10 @@
             <hr>
             <a href="{{ request.path }}?search={{ genre }}">{{ genre }}</a>
         {% endfor %}
+
     </div>
+
+
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
         {% for book in books %}

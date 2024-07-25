@@ -23,7 +23,7 @@ def home(request):
 
 def books(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
-    books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) )
+    books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search))
     books = list(dict.fromkeys(books))
     genres=Genre.objects.all()
     context = {"books": books, 'genres': genres}
@@ -61,7 +61,7 @@ def about(request):
         return render(request, 'base/about.html')
 
 @login_required(login_url='login')
-def profile(request, pk):
+def cart(request, pk):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     total_price=0
     if search:
@@ -74,14 +74,14 @@ def profile(request, pk):
         for book in books:
             total_price+=book.price
         context = {"books": books, 'total_price': total_price}
-        return render(request, 'base/profile.html', context)
+        return render(request, 'base/cart.html', context)
 
 @login_required(login_url='login')
 def adding(request, id):
     user=request.user
     book=Book.objects.get(id=id)
     user.books.add(book)
-    return redirect('profile', request.user.id)
+    return redirect('cart', request.user.id)
 
 
 @login_required(login_url='login')
@@ -89,7 +89,7 @@ def delete(request, id):
     obj = Book.objects.get(id=id)
     if request.method=="POST":
         request.user.books.remove(obj)
-        return redirect('profile', request.user.id)
+        return redirect('cart', request.user.id)
 
     return render(request, 'base/delete.html', {'obj': obj} )
 
@@ -104,7 +104,7 @@ def drop(request, id):
 
 def login_user(request):
     if request.user.is_authenticated:
-        return redirect('profile', request.user.id)
+        return redirect('cart', request.user.id)
     if request.method == 'POST':
         username=request.POST.get('username').lower()
         password=request.POST.get('password')
@@ -117,7 +117,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('profile', request.user.id)
+            return redirect('cart', request.user.id)
         else:
             messages.error(request, 'User or Password is not exist!')
     return render(request, 'base/login.html')
@@ -137,7 +137,7 @@ def registration(request):
             user.username = user.username.lower()
             user.save()
             login(request, user)
-            return redirect('profile', user.id)
+            return redirect('cart', user.id)
 
         else:
             messages.error(request, 'Follow the instructions and create proper user and password')
@@ -190,7 +190,8 @@ def book(request, id):
 
 def author(request, id):
     author = Author.objects.get(id=id)
-    return render(request, 'base/author.html', {'author': author})
+    books=Book.objects.filter(author=author)
+    return render(request, 'base/author.html', {'author': author, 'books':books})
 
 def serie(request, id):
     serie=Series.objects.get(id=id)
@@ -206,7 +207,7 @@ def update_user(request):
         form=UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('profile', user.id)
+            return redirect('cart', user.id)
 
 
     context = {'form': form}

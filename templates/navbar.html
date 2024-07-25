@@ -16,13 +16,13 @@
             </form>
         </div>
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="{% url 'books' %}" class="nav-link px-2 link-secondary">წიგნები</a></li>
-            <li><a href="{% url 'series' %}" class="nav-link px-2 link-secondary">სერიები</a></li>
-            <li><a href="{% url 'authors' %}" class="nav-link px-2 link-secondary">ავტორები</a></li>
-            <li><a href="{% url 'about' %}" class="nav-link px-2 link-secondary">ჩვენ შესახებ</a></li>
+            <li><a href="{% url 'books' %}" class="nav-link px-2 link-secondary">BOOKS</a></li>
+            <li><a href="{% url 'series' %}" class="nav-link px-2 link-secondary">SERIES</a></li>
+            <li><a href="{% url 'authors' %}" class="nav-link px-2 link-secondary">AUTHORS</a></li>
+            <li><a href="{% url 'about' %}" class="nav-link px-2 link-secondary">ABOUT</a></li>
 
             {% if request.user.is_authenticated %}
-            <li><a href="{% url 'profile' user.id %}" class="nav-link px-2 link-secondary">კალათა</a></li>
+            <li><a href="{% url 'cart' user.id %}" class="nav-link px-2 link-secondary">MY CART</a></li>
             {% endif %}
         </ul>
 

@@ -3,7 +3,19 @@
 {% block content %}
 
 <style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
 
+    .container1 {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
 
     .button-group {
         display: flex;
@@ -16,6 +28,8 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s, opacity 0.3s;
     }
 
     .button-group .btn-primary {
@@ -33,6 +47,30 @@
         opacity: 0.8;
     }
 
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .profile-header img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+
+    .profile-header h2 {
+        margin: 0;
+        font-size: 28px;
+    }
+
+    .profile-header p {
+        margin: 0;
+        color: gray;
+    }
+
     .form {
         display: flex;
         flex-direction: column;
@@ -46,6 +84,7 @@
         display: block;
         font-weight: bold;
         margin-bottom: 5px;
+        font-size: 14px;
     }
 
     .form-group input,
@@ -56,6 +95,7 @@
         border: 1px solid #ced4da;
         border-radius: 4px;
         box-sizing: border-box;
+        font-size: 14px;
     }
 
     .btn-success {
@@ -65,6 +105,8 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s, opacity 0.3s;
     }
 
     .btn-success:hover {
@@ -72,10 +114,18 @@
     }
 </style>
 
-<div class="container">
+<div class="container1">
     <div class="button-group">
         <a href="{{ request.META.HTTP_REFERER }}"><button class="btn btn-secondary">Go back</button></a>
         <a href="{% url 'add' %}"><button class="btn btn-primary">Add Book</button></a>
+    </div>
+
+    <div class="profile-header">
+        <img src="{{ request.user.avatar.url }}" alt="Profile Picture">
+        <div>
+            <h2>{{ request.user.username }}</h2>
+            <p>{{ request.user.email }}</p>
+        </div>
     </div>
 
     <form method="POST" action="" enctype="multipart/form-data" class="form">
@@ -91,3 +141,5 @@
 </div>
 
 {% endblock %}
+
+
