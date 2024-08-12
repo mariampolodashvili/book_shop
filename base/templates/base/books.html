@@ -3,141 +3,158 @@
 {% block content %}
 
 <style>
+    /* General page styles */
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 3fr; /* Adjusted grid-template-columns for better balance */
-        gap: 20px; /* Added gap between grid items for better spacing */
+        grid-template-columns: 1fr 3fr;
+        gap: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
     }
 
     .genres {
-        margin: 20px; /* Reduced margin for better alignment */
-        padding: 20px; /* Added padding for better readability */
-        background-color: #f0f0f0; /* Soft background color for contrast */
-        border-radius: 8px; /* Rounded corners for aesthetics */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle box shadow for depth */
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-height: 600px; /* Limit the height */
+        overflow-y: auto; /* Add scroll if content exceeds height */
     }
 
     .genres h3 {
-        font-size: 1.5rem; /* Increased font size for headings */
-        margin-bottom: 10px; /* Adjusted margin for spacing */
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        color: #333;
+        border-bottom: 2px solid #343a40;
+        padding-bottom: 5px;
     }
 
     .genres a {
         display: block;
-        margin-bottom: 5px; /* Added margin between genre links */
-        color: #333; /* Darkened link color for readability */
-        text-decoration: none; /* Removed underline for cleaner look */
+        color: #555;
+        text-decoration: none;
+        padding: 6px 0;
+        transition: color 0.3s ease, padding-left 0.3s ease;
     }
 
     .genres a:hover {
-        text-decoration: underline; /* Underline on hover for interactive feel */
+        color: #28a745;
+        padding-left: 5px;
     }
 
     .card-custom {
-        margin-bottom: 20px; /* Added bottom margin for spacing between cards */
-        border: 1px solid #e0e0e0; /* Soft border for separation */
-        border-radius: 8px; /* Rounded corners for aesthetics */
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition effects */
-        display: flex; /* Use flexbox to align items */
-        flex-direction: column; /* Ensure children stack vertically */
-
-        position: relative; /* Relative position for absolute positioning of buttons */
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
     }
 
     .card-custom:hover {
-        transform: translateY(-5px); /* Lift card on hover for interactive effect */
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Enhanced box shadow on hover */
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
 
-    .card-custom .card-title {
-        font-size: 1.1rem; /* Increased font size for card title */
-        margin-bottom: 5px; /* Adjusted margin for spacing */
+    .card-custom img {
+        border-bottom: 1px solid #eee;
     }
 
-    .card-custom .card-text {
-        font-size: 0.9rem; /* Reduced font size for card text */
-        color: #666; /* Lightened text color for readability */
-        flex-grow: 1; /* Allow text to expand vertically */
-    }
-
-    .card-custom .card-img-top {
-        position: relative; /* Position relative for absolute positioning of overlay */
-    }
-
-    .card-custom .card-img-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5); /* Dark overlay */
-        opacity: 0; /* Hidden by default */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column; /* Stack buttons vertically */
-        transition: opacity 0.3s ease; /* Smooth transition */
+    .card-img-overlay {
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .card-custom:hover .card-img-overlay {
-        opacity: 1; /* Show on hover */
+        opacity: 1;
     }
 
-    .card-custom .btn {
-        font-size: 0.8rem; /* Reduced font size for buttons */
-        padding: 8px 16px; /* Increased padding for button size */
-        border-radius: 5px; /* Rounded corners for buttons */
-        transition: background-color 0.3s ease; /* Smooth transition for background color */
-        margin: 5px; /* Margin between buttons */
+    .card-img-overlay .btn {
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        border-radius: 25px;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .card-custom .btn-outline-secondary {
-        color: #fff; /* Light text color for contrast */
-        border: 1px solid #ccc; /* Light border for contrast */
-        background-color: transparent; /* Transparent background */
+    .card-img-overlay .btn-outline-secondary {
+        color: #fff;
+        border-color: #fff;
     }
 
-    .card-custom .btn-outline-secondary:hover {
-        background-color: #f0f0f0; /* Light background on hover for interaction */
-        color: #333; /* Dark text color on hover */
+    .card-img-overlay .btn-outline-secondary:hover {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
     }
 
     .card-footer-custom {
-        background-color: #f8f9fa; /* Light background for footer */
-        border-top: 1px solid #e0e0e0; /* Soft border on top */
-        padding: 10px 15px; /* Padding for spacing */
-        border-radius: 0 0 8px 8px; /* Rounded corners on bottom */
-        text-align: center; /* Centered text */
+        background-color: #f8f9fa;
+        border-top: 1px solid #eee;
+        padding: 5px;
+        text-align: center;
     }
 
     .card-footer-custom h5 {
-        font-size: 1rem; /* Font size for book name */
-        margin: 0; /* No margin for compact look */
-        color: #333; /* Dark color for text */
+        font-size: 1.2rem;
+        color: #333;
     }
 
     .card-footer-custom h6 {
-        font-size: 0.9rem; /* Font size for author name */
-        margin: 0; /* No margin for compact look */
-        color: #666; /* Light color for text */
+        font-size: 1rem;
+        color: #777;
     }
 
     .card-footer-custom p {
-        font-size: 0.8rem; /* Font size for price */
-        margin: 5px 0 0; /* Margin for spacing */
-        color: #28a745; /* Green color for price */
+        font-size: 0.9rem;
+        color: #28a745;
+    }
+
+
+    @media (max-width: 768px) {
+        .home-container {
+            grid-template-columns: 1fr;
+        }
+
+        .genres {
+            margin-bottom: 20px;
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        .card-custom {
+            margin-bottom: 30px;
+        }
     }
 </style>
 
 <div class="home-container">
     <div class="genres">
-        <h3>Genres:</h3>
-        <a href="{{ request.path }}">ALL</a>
+        <h3>Genres</h3>
+        <a href="{{ request.path }}">All</a>
         {% for genre in genres %}
-            <hr>
             <a href="{{ request.path }}?search={{ genre }}">{{ genre }}</a>
         {% endfor %}
+        <br/>
 
+        <h3>Categories</h3>
+        {% for category in categories %}
+            <a href="{{ request.path }}?search={{ category }}">{{ category }}</a>
+        {% endfor %}
+        <br/>
+
+        <h3>Prices</h3>
+        {% for price in price_ranges %}
+            <a href="{{ request.path }}?price_range={{ price }}">{{ price }}</a>
+        {% endfor %}
+        <br/>
+
+        <h3>Age Groups</h3>
+        {% for age in age %}
+            <a href="{{ request.path }}?search={{ age }}">{{ age }}</a>
+        {% endfor %}
     </div>
 
 
@@ -158,7 +175,7 @@
                             </a>
                         {% else %}
                             <a href="{% url 'adding' book.id %}">
-                                <button type="button" class="btn btn-outline-secondary btn-sm">Add to cart</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm">Add to Cart</button>
                             </a>
                         {% endif %}
                         {% if request.user == book.creator %}
@@ -180,3 +197,5 @@
 </div>
 
 {% endblock %}
+
+

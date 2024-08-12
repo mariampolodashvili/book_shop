@@ -21,14 +21,35 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
+class Price(models.Model):
+    price=models.FloatField(max_length=100)
+
+    def __str__(self):
+        return str(self.price)
+
+class Categories(models.Model):
+    name=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Age(models.Model):
+    age_range=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.age_range
+
+
 class Book(models.Model):
     creator= models.ForeignKey('User', on_delete=models.SET("Unknown Creator"))
     picture = models.ImageField(null=True, blank=True)
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     genre=models.ManyToManyField(Genre, related_name="books", blank=True)
+    categories=models.ForeignKey(Categories, related_name="books", blank=True, null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(Author, on_delete=models.SET("Unknown Author"))
-    price = models.FloatField(max_length=200)
+    price = models.ForeignKey(Price, related_name="books", blank=True, null=True, on_delete=models.SET_NULL)
+    age_range=models.ForeignKey(Age, related_name="books", blank=True, null=True, on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
 
@@ -66,5 +87,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.body
+
+
+
 
 

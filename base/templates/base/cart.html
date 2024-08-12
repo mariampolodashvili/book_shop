@@ -58,7 +58,7 @@
         cursor: pointer;
         transition: background-color 0.3s, color 0.3s;
     }
-     .view-button {
+    .view-button {
         color: black;
     }
     .view-button:hover {
@@ -77,6 +77,23 @@
         font-size: 1.5em;
         color: #333333;
     }
+    .checkout-button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.2em;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .checkout-button:hover {
+        background-color: #218838;
+    }
 </style>
 
 <div class="cart-container">
@@ -86,18 +103,22 @@
         <div class="book-details">
             <img class="book-image" src="{{ book.picture.url }}" alt="{{ book.name }}">
             <div class="book-info">
-                <p class="book-author"><strong>Author:</strong> {{ book.author }}</p>
+                <a href="{% url 'author' book.author.id %}">
+                    <p class="book-author"><strong>Author:</strong> {{ book.author }}</p>
+                </a>
                 <p class="book-price"><strong>Price:</strong> ${{ book.price }}</p>
                 <div class="book-actions">
-                <a href="{% url 'book' book.id %}"> <button class="view-button">View</button> </a>
-                    <a href="{% url 'delete' book.id %}">  <button class="delete-button">Delete</button> </a>
+                    <a href="{% url 'book' book.id %}"> <button class="view-button">View</button> </a>
+                    <a href="{% url 'delete' book.id %}"> <button class="delete-button">Delete</button> </a>
                 </div>
             </div>
         </div>
-
     </div>
     {% endfor %}
     <hr>
     <p class="total-price">Total Price: ${{ total_price }}</p>
+    <a href="">
+        <button class="checkout-button">Buy</button>
+    </a>
 </div>
 {% endblock %}

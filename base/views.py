@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Book, User, Bestsellers, Series, Author, Genre, Comment
+from .models import Book, User, Bestsellers, Series, Author, Genre, Comment, Price, Categories, Age
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -12,8 +11,36 @@ def home(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     seeder_dunc()
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search) | Q(age_range__age_range__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         bestseller_books = Bestsellers.objects.prefetch_related('books').all()
@@ -21,19 +48,74 @@ def home(request):
         return render(request, 'base/home.html', context)
 
 
+
 def books(request):
-    search = request.GET.get("search") if request.GET.get('search') != None else ''
-    books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search))
-    books = list(dict.fromkeys(books))
-    genres=Genre.objects.all()
-    context = {"books": books, 'genres': genres}
+    search = request.GET.get("search", "")
+    price_range = request.GET.get("price_range", None)
+
+    price_ranges = {
+        "0-10": (0, 10),
+        "10-15": (10, 15),
+        "15-20": (15, 20),
+        "20-25": (20, 25),
+        "25-50": (25, 50),
+    }
+
+    books = Book.objects.filter( Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) |  Q(categories__name__icontains=search) | Q(age_range__age_range__icontains=search)).distinct()
+
+    if price_range and price_range in price_ranges:
+        min_price, max_price = price_ranges[price_range]
+        books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+    genres = Genre.objects.all()
+    categories = Categories.objects.all()
+    age_ranges = Age.objects.all()
+
+    context = {
+        "books": books,
+        "genres": genres,
+        "categories": categories,
+        "age": age_ranges,
+        "price_ranges": price_ranges,
+        "selected_price_range": price_range
+    }
+
     return render(request, 'base/books.html', context)
 
+
 def series(request):
-    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    search = request.GET.get("search", "")
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         series=Series.objects.all()
@@ -43,8 +125,36 @@ def series(request):
 def authors(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         authors=Author.objects.all()
@@ -54,8 +164,36 @@ def authors(request):
 def about(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         return render(request, 'base/about.html')
@@ -65,14 +203,43 @@ def cart(request, pk):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     total_price=0
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         user= User.objects.get(id=pk)
         books = user.books.all()
         for book in books:
-            total_price+=book.price
+            total_price+=book.price.price
+
         context = {"books": books, 'total_price': total_price}
         return render(request, 'base/cart.html', context)
 
@@ -150,8 +317,36 @@ def registration(request):
 def add_book(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         authors = Author.objects.all()
@@ -186,12 +381,40 @@ def add_book(request):
 def book(request, id):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         book = Book.objects.get(id=id)
-        book_comments=book.comment_set.all() #.order_by('-created')
+        book_comments=book.comment_set.all()
         author=Author.objects.get(name=book.author)
         if request.method == "POST":
             Comment.objects.create(
@@ -204,8 +427,36 @@ def book(request, id):
 def author(request, id):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         author = Author.objects.get(id=id)
@@ -215,8 +466,36 @@ def author(request, id):
 def serie(request, id):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         serie=Series.objects.get(id=id)
@@ -227,8 +506,36 @@ def serie(request, id):
 def update_user(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         user=request.user
@@ -244,6 +551,9 @@ def update_user(request):
         return render(request, 'base/update_user.html', context)
 
 
+
+
+
 @login_required(login_url='login')
 def delete_comment(request, id):
     comment = Comment.objects.get(id=id)
@@ -253,16 +563,95 @@ def delete_comment(request, id):
         return redirect('book', book.id)
     return render(request, 'base/delete.html', {'obj' : comment} )
 
-
+@login_required(login_url='login')
 def profile(request, id):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     if search:
-        books = Book.objects.filter(Q(name__icontains=search) | Q(author__name__icontains=search))
-        context = {"books": books}
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
         return render(request, 'base/books.html', context)
     else:
         user=User.objects.get(id=id)
         books=Book.objects.filter(creator=user)
         context={'user': user, 'books':books}
         return render(request, 'base/profile.html', context)
+
+
+
+def edit_book(request, id):
+    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    if search:
+        price_range = request.GET.get("price_range", None)
+
+        price_ranges = {
+            "0-10": (0, 10),
+            "10-15": (10, 15),
+            "15-20": (15, 20),
+            "20-25": (20, 25),
+            "25-50": (25, 50),
+        }
+
+        books = Book.objects.filter(
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+
+        if price_range and price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            books = books.filter(price__price__gte=min_price, price__price__lte=max_price)
+
+        genres = Genre.objects.all()
+        categories = Categories.objects.all()
+        age_ranges = Age.objects.all()
+
+        context = {
+            "books": books,
+            "genres": genres,
+            "categories": categories,
+            "age": age_ranges,
+            "price_ranges": price_ranges,
+            "selected_price_range": price_range
+        }
+
+        return render(request, 'base/books.html', context)
+    else:
+        user=request.user
+        book=Book.objects.get(id=id)
+        form = BookForm(instance=book)
+        if request.method == 'POST':
+            form=BookForm(request.POST, request.FILES, instance=book)
+            if form.is_valid():
+                form.save()
+                return redirect('profile', user.id)
+
+
+        context={'book': book, 'form':form}
+
+    return render(request, 'base/edit_book.html', context)
 

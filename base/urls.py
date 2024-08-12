@@ -20,6 +20,8 @@ urlpatterns = [
     path('drop/<str:id>', views.drop, name='drop'),
     path('update_user/', views.update_user, name='update_user'),
     path('delete_comment/<str:id>', views.delete_comment, name='delete_comment'),
-    path('profile/<str:id>', views.profile, name='profile')
+    path('profile/<str:id>', views.profile, name='profile'),
+    path('edit_book/<str:id>', views.edit_book, name='edit_book'),
+
 
 ]
