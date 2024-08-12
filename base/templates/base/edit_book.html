@@ -1,0 +1,79 @@
+{% extends 'main.html' %}
+
+{% block title %}
+<title>Edit Book Page</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    .edit-book-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .edit-book-form h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .edit-book-form label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .edit-book-form input[type="text"],
+    .edit-book-form input[type="number"],
+    .edit-book-form input[type="file"],
+    .edit-book-form textarea,
+    .edit-book-form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .edit-book-form input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .edit-book-form input[type="submit"]:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="edit-book-form">
+    <h1>Edit Book</h1>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+        <div>
+            <label>{{ field.label }}:</label>
+            <br>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <br>
+        <input type="submit" value="Save Changes">
+    </form>
+</div>
+
+{% endblock %}
+
+
+
