@@ -33,11 +33,8 @@ class Categories(models.Model):
     def __str__(self):
         return self.name
 
-class Age(models.Model):
-    age_range=models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.age_range
+
 
 
 class Book(models.Model):
@@ -49,7 +46,6 @@ class Book(models.Model):
     categories=models.ForeignKey(Categories, related_name="books", blank=True, null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(Author, on_delete=models.SET("Unknown Author"))
     price = models.ForeignKey(Price, related_name="books", blank=True, null=True, on_delete=models.SET_NULL)
-    age_range=models.ForeignKey(Age, related_name="books", blank=True, null=True, on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
 

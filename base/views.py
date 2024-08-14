@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from .models import Book, User, Bestsellers, Series, Author, Genre, Comment, Price, Categories, Age
+from .models import Book, User, Bestsellers, Series, Author, Genre, Comment, Price, Categories
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import MyUserCreationForm, BookForm, UserForm
 from .seeder import seeder_dunc
 from django.contrib import messages
+
 
 def home(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
@@ -22,7 +23,7 @@ def home(request):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search) | Q(age_range__age_range__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search) ).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -30,13 +31,12 @@ def home(request):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
+
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -61,7 +61,7 @@ def books(request):
         "25-50": (25, 50),
     }
 
-    books = Book.objects.filter( Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) |  Q(categories__name__icontains=search) | Q(age_range__age_range__icontains=search)).distinct()
+    books = Book.objects.filter( Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) |  Q(categories__name__icontains=search) ).distinct()
 
     if price_range and price_range in price_ranges:
         min_price, max_price = price_ranges[price_range]
@@ -69,13 +69,12 @@ def books(request):
 
     genres = Genre.objects.all()
     categories = Categories.objects.all()
-    age_ranges = Age.objects.all()
+
 
     context = {
         "books": books,
         "genres": genres,
         "categories": categories,
-        "age": age_ranges,
         "price_ranges": price_ranges,
         "selected_price_range": price_range
     }
@@ -105,13 +104,12 @@ def series(request):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
+
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -144,13 +142,11 @@ def authors(request):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -183,13 +179,11 @@ def about(request):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -222,13 +216,11 @@ def cart(request, pk):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -336,13 +328,11 @@ def add_book(request):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -400,13 +390,11 @@ def book(request, id):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -446,13 +434,11 @@ def author(request, id):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -485,13 +471,11 @@ def serie(request, id):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -525,13 +509,11 @@ def update_user(request):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -586,13 +568,11 @@ def profile(request, id):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
@@ -628,13 +608,11 @@ def edit_book(request, id):
 
         genres = Genre.objects.all()
         categories = Categories.objects.all()
-        age_ranges = Age.objects.all()
 
         context = {
             "books": books,
             "genres": genres,
             "categories": categories,
-            "age": age_ranges,
             "price_ranges": price_ranges,
             "selected_price_range": price_range
         }
