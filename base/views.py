@@ -350,12 +350,12 @@ def add_book(request):
         if request.method == 'POST':
             book_author = request.POST.get('author')
             book_genre = request.POST.get('genre')
-            book_price_id = request.POST.get('price')  # Assuming price is sent as a primary key
+            book_price_id = request.POST.get('price')
 
             author, created = Author.objects.get_or_create(name=book_author)
             genre, created = Genre.objects.get_or_create(name=book_genre)
 
-            # Fetch the Price instance based on the primary key
+
             price = get_object_or_404(Price, pk=int(book_price_id))
 
             form = BookForm(request.POST)
