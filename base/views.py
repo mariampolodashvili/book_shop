@@ -1,16 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book, User, Bestsellers, Series, Author, Genre, Comment, Price, Categories
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import MyUserCreationForm, BookForm, UserForm
-from .seeder import seeder_dunc
+# from .seeder import seeder_dunc
 from django.contrib import messages
 
 
 def home(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
-    seeder_dunc()
+    # seeder_dunc()
     if search:
         price_range = request.GET.get("price_range", None)
 
@@ -96,7 +96,7 @@ def series(request):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search) ).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -134,7 +134,7 @@ def authors(request):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -171,7 +171,7 @@ def about(request):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -208,7 +208,7 @@ def cart(request, pk):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -307,7 +307,7 @@ def registration(request):
 
 @login_required(login_url='login')
 def add_book(request):
-    search = request.GET.get("search") if request.GET.get('search') != None else ''
+    search = request.GET.get("search") if request.GET.get('search') else ''
     if search:
         price_range = request.GET.get("price_range", None)
 
@@ -320,7 +320,11 @@ def add_book(request):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) |
+            Q(author__name__icontains=search) |
+            Q(genre__name__icontains=search) |
+            Q(categories__name__icontains=search)
+        ).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -340,31 +344,40 @@ def add_book(request):
         return render(request, 'base/books.html', context)
     else:
         authors = Author.objects.all()
-        genres =Genre.objects.all()
-        form=BookForm()
+        genres = Genre.objects.all()
+        form = BookForm()
 
-        if request.method =='POST':
-            book_author=request.POST.get('author')
-            book_genre=request.POST.get('genre')
+        if request.method == 'POST':
+            book_author = request.POST.get('author')
+            book_genre = request.POST.get('genre')
+            book_price_id = request.POST.get('price')  # Assuming price is sent as a primary key
 
             author, created = Author.objects.get_or_create(name=book_author)
             genre, created = Genre.objects.get_or_create(name=book_genre)
 
+            # Fetch the Price instance based on the primary key
+            price = get_object_or_404(Price, pk=int(book_price_id))
+
             form = BookForm(request.POST)
 
-            new_book = Book(picture=request.FILES['picture'], name=form.data['name'], author=author,
-                            description=form.data['description'], price=form.data['price'], creator=request.user )
+            new_book = Book(
+                picture=request.FILES.get('picture'),
+                name=form.data['name'],
+                author=author,
+                description=form.data['description'],
+                price=price,  # Assign the Price instance
+                creator=request.user
+            )
 
-            if not (Book.objects.filter(picture=request.FILES['picture'])):
+            if not Book.objects.filter(picture=request.FILES.get('picture')).exists():
                 new_book.save()
                 new_book.genre.add(genre)
             else:
-                messages.error(request, 'Book with same picture already existx...')
+                messages.error(request, 'Book with the same picture already exists...')
 
             return redirect('books')
 
-
-        context={'form': form, 'authors': authors, 'genres':genres}
+        context = {'form': form, 'authors': authors, 'genres': genres}
         return render(request, 'base/add_book.html', context)
 
 
@@ -382,7 +395,7 @@ def book(request, id):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -426,7 +439,7 @@ def author(request, id):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -463,7 +476,7 @@ def serie(request, id):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -501,7 +514,7 @@ def update_user(request):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -560,7 +573,7 @@ def profile(request, id):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
@@ -600,7 +613,7 @@ def edit_book(request, id):
         }
 
         books = Book.objects.filter(
-            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search)).distinct()
+            Q(name__icontains=search) | Q(author__name__icontains=search) | Q(genre__name__icontains=search) | Q(categories__name__icontains=search)).distinct()
 
         if price_range and price_range in price_ranges:
             min_price, max_price = price_ranges[price_range]
