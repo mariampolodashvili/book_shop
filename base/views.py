@@ -7,7 +7,6 @@ from .forms import MyUserCreationForm, BookForm, UserForm
 # from .seeder import seeder_dunc
 from django.contrib import messages
 
-
 def home(request):
     search = request.GET.get("search") if request.GET.get('search') != None else ''
     # seeder_dunc()
@@ -288,7 +287,6 @@ def logout_user(request):
 
 def registration(request):
     form=MyUserCreationForm()
-
     if request.method == 'POST':
         form = MyUserCreationForm(request.POST)
         if form.is_valid():
@@ -297,11 +295,8 @@ def registration(request):
             user.save()
             login(request, user)
             return redirect('profile', user.id)
-
         else:
             messages.error(request, 'Follow the instructions and create proper user and password')
-
-
     context = {'form': form}
     return render(request, 'base/registration.html', context)
 
